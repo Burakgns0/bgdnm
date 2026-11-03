@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilgisayar Donanımı ve Ağ Sistemleri - Tam Müfredat ve 200 Soruluk Soru Bankası</title>
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --secondary-color: #2b6cb0;
+            --accent-color: #319795;
+            --bg-color: #f7fafc;
+            --card-bg: #ffffff;
+            --text-color: #2d3748;
+            --border-color: #e2e8f0;
+            --correct-bg: #c6f6d5;
+            --correct-border: #38a169;
+            --incorrect-bg: #fed7d7;
+            --incorrect-border: #e53e3e;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+        }
+
+        header p {
+            margin: 0.5rem 0 0;
+            font-size: 1.1rem;
+            opacity: 0.85;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            flex: 1;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        sidebar {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            height: fit-content;
+        }
+
+        sidebar h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        ul.menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul.menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        ul.menu li a {
+            color: var(--text-color);
+            text-decoration: none;
+            display: block;
+            padding: 0.75rem 0.85rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.95rem;
+            background-color: #f8fafc;
+            border: 1px solid var(--border-color);
+        }
+
+        ul.menu li a:hover, ul.menu li a.active {
+            background-color: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+
+        ul.menu li a.banka-btn {
+            background-color: #fff5f5;
+            color: #c53030;
+            border-color: #feb2b2;
+        }
+
+        ul.menu li a.banka-btn:hover, ul.menu li a.banka-btn.active {
+            background-color: #c53030;
+            color: white;
+            border-color: #c53030;
+        }
+
+        main {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .section-content {
+            display: none;
+        }
+
+        .section-content.active {
+            display: block;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-top: 0;
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            margin-top: 1.8rem;
+        }
+
+        .info-card {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1.25rem;
+            margin: 1rem 0;
+            line-height: 1.6;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        .quiz-container {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+        }
+
+        .quiz-question {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+        }
+
+        .quiz-question p {
+            font-weight: 600;
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1.05rem;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .options-list li {
+            margin-bottom: 0.6rem;
+        }
+
+        .options-list label {
+            display: block;
+            padding: 0.75rem 1rem;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .options-list label:hover {
+            background: #edf2f7;
+        }
+
+        .options-list label.correct {
+            background-color: var(--correct-bg) !important;
+            border-color: var(--correct-border) !important;
+            color: #22543d;
+            font-weight: bold;
+        }
+
+        .options-list label.incorrect {
+            background-color: var(--incorrect-bg) !important;
+            border-color: var(--incorrect-border) !important;
+            color: #742a2a;
+            font-weight: bold;
+        }
+
+        .explanation {
+            display: none;
+            margin-top: 0.75rem;
+            padding: 0.75rem 1rem;
+            background-color: #fffaf0;
+            border-left: 4px solid #dd6b20;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            color: #7b341e;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Bilgisayar Donanımı ve Ağ Sistemleri</h1>
+        <p>Haftalık Modüler Ders Notları ve 200 Soruluk Vize/Final Soru Bankası</p>
+    </header>
+
+    <div class="container">
+        <sidebar>
+            <h3>Menü</h3>
+            <ul class="menu">
+                <li><a href="javascript:void(0)" onclick="switchTab('hafta1', this)" class="active">1. Hafta: Temel Donanım & CPU</a></li>
+                <li><a href="javascript:void(0)" onclick="switchTab('hafta2', this)">2. Hafta: Giriş Birimleri</a></li>
+                <li><a href="javascript:void(0)" onclick="switchTab('hafta3', this)">3. Hafta: Çıkış & Çift Yönlü Birimler</a></li>
+                <li><a href="javascript:void(0)" onclick="switchTab('hafta4', this)">4. Hafta: Yazıcılar & Depolama</a></li>
+                <li><a href="javascript:void(0)" onclick="switchTab('hafta5', this)">5. Hafta: Anakart & Ağ Sistemleri</a></li>
+                <li><a href="javascript:void(0)" onclick="switchTab('sorubankasi', this)" class="banka-btn">📚 200 SORULUK SORU BANKASI</a></li>
+            </ul>
+        </sidebar>
+
+        <main>
+            <!-- 1. HAFTA -->
+            <div id="hafta1" class="section-content active">
+                <h2>1. Hafta: Temel Donanım ve İşlemci Mimarisi</h2>
+                <div class="info-card">
+                    <h3>Geniş Kapsamlı Konu Özeti</h3>
+                    <p>Bilgisayar; veri kabul eden (Giriş), bu verileri işleyen (İşlem), geçici veya kalıcı olarak saklayan (Depolama) ve kullanıcıya sunan (Çıkış) elektronik bileşenlerden oluşur.</p>
+                    <ul>
+                        <li><strong>İşlemci (CPU):</strong> Aritmetiksel (ALU) ve mantıksal kararları yürütür. Saat hızı (GHz) saniyedeki döngü sayısını temsil eder.</li>
+                        <li><strong>Önbellek (Cache):</strong> CPU ile RAM arasındaki hız uyumsuzluğunu kapatan süper hızlı SRAM katmanlarıdır (L1, L2, L3).</li>
+                        <li><strong>BIOS/UEFI:</strong> Açılışta donanım testini (POST) yapan kalıcı yazılımdır.</li>
+                        <li><strong>Güç Kaynağı (PSU):</strong> Şebekedeki alternatif akımı (AC), bileşenlerin kullandığı doğru akıma (DC) dönüştürür.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 2. HAFTA -->
+            <div id="hafta2" class="section-content">
+                <h2>2. Hafta: Giriş Birimleri</h2>
+                <div class="info-card">
+                    <h3>Geniş Kapsamlı Konu Özeti</h3>
+                    <p>Dış ortamdaki veri, hareket, ses veya görselleri bilgisayarın işleyebileceği sayısal sinyallere çeviren araçlardır.</p>
+                    <ul>
+                        <li><strong>Klavye & Fare:</strong> Temel komut girme donanımlarıdır. Farede DPI çözünürlük algısını belirler.</li>
+                        <li><strong>Tarayıcı (Scanner) & OCR:</strong> Belgeleri tarayıp yazılı metne dönüştürür (DPI çözünürlük ölçüsüdür).</li>
+                        <li><strong>Mikrofon:</strong> Ses basınç değişimlerini elektrik sinyallerine aktarır.</li>
+                        <li><strong>Biyometrik Okuyucular:</strong> Parmak izi okuyucu gibi biyometrik veri aktaran giriş araçlarıdır.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 3. HAFTA -->
+            <div id="hafta3" class="section-content">
+                <h2>3. Hafta: Çıkış ve Çift Yönlü Birimler</h2>
+                <div class="info-card">
+                    <h3>Geniş Kapsamlı Konu Özeti</h3>
+                    <p>İşlenen verileri kullanıcıya gösteren (Çıkış) veya aynı anda veri iletip alan (G/Ç) cihazlardır.</p>
+                    <ul>
+                        <li><strong>Monitörler:</strong> Yenileme hızı (Hz) ve çözünürlük (Piksel sayısı) temel kriterdir. LCD paneller IPS, VA, TN olarak ayrılır.</li>
+                        <li><strong>Görüntü Arayüzleri:</strong> HDMI hem dijital ses hem görüntü taşır. VGA ise analog sinyal iletir.</li>
+                        <li><strong>Çift Yönlü (G/Ç) Cihazlar:</strong> Dokunmatik ekranlar, taramalı/yazıcı birleşik cihazlar ve modemler bu sınıftadır.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 4. HAFTA -->
+            <div id="hafta4" class="section-content">
+                <h2>4. Hafta: Yazıcılar, Depolama ve Disk Teknolojileri</h2>
+                <div class="info-card">
+                    <h3>Geniş Kapsamlı Konu Özeti</h3>
+                    <p>Baskı teknolojileri ve kalıcı depolama sistemleri bu modülün temel konusudur.</p>
+                    <ul>
+                        <li><strong>Yazıcılar:</strong> Lazer (Toner kullanan), Mürekkep püskürtmeli, Nokta vuruşlu (Darbeli) ve Termal (Isıya duyarlı) olarak sınıflandırılır. Hız PPM ile ölçülür.</li>
+                        <li><strong>HDD vs SSD:</strong> HDD dönen manyetik plakalar (RPM) barındırır. SSD ise mekanik parçası olmayan NAND Flash bellek çipleriyle (NVMe / PCIe / SATA) çalışır.</li>
+                        <li><strong>RAID Sistemleri:</strong> RAID 0 hızı artırır, RAID 1 diski aynalayarak veri güvenliği sağlar.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 5. HAFTA -->
+            <div id="hafta5" class="section-content">
+                <h2>5. Hafta: Anakart, Veri Yolları ve Ağ Sistemleri</h2>
+                <div class="info-card">
+                    <h3>Geniş Kapsamlı Konu Özeti</h3>
+                    <p>Tüm bileşenleri buluşturan anakart ile bilgisayar ağlarını oluşturan donanımlar anlatılır.</p>
+                    <ul>
+                        <li><strong>Anakart & Veri Yolları:</strong> PCIe yuvaları ekran kartı ve SSD bağlamak için kullanılır. VRM devresi işlemciye güç sağlar.</li>
+                        <li><strong>Ağ Donanımları:</strong> Switch (Katman 2) MAC adresi ile; Router (Katman 3) IP adresi ile yönlendirme yapar. Hub ise veriyi tüm portlara yayınlar (Broadcast).</li>
+                        <li><strong>Ağ Servisleri:</strong> DHCP otomatik IP dağıtır, DNS alan adlarını IP adreslerine çevirir.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 6. BAŞLIK: 200 SORULUK SORU BANKASI -->
+            <div id="sorubankasi" class="section-content">
+                <h2>📚 Vize / Final 200 Soruluk Tam Soru Bankası</h2>
+                <p>Kelime belgesindeki 200 sorunun **tamamı birebir cümleleriyle** buraya aktarılmıştır. Tıkladığınız şık **doğruysa yeşil**, **yanlışsa kırmızı** yanacak ve yanlış şık işaretlendiğinde altında doğruluk açıklaması belirecektir.</p>
+
+                <div id="quizContainer200" class="quiz-container">
+                    <!-- 200 Soru Javascript ile Otomatik Yüklenir -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Bilgisayar Donanımı ve Ağ Sistemleri İnteraktif Öğrenme Platformu</p>
+    </footer>
+
+    <script>
+        // Sayfa / Tab Değiştirme Fonksiyonu
+        function switchTab(sectionId, clickedElement) {
+            const sections = document.querySelectorAll('.section-content');
+            sections.forEach(sec => sec.classList.remove('active'));
+            
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) targetSection.classList.add('active');
+            
+            const menuLinks = document.querySelectorAll('ul.menu a');
+            menuLinks.forEach(link => link.classList.remove('active'));
+            clickedElement.classList.add('active');
+            
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        // BİREBİR 200 SORULUK VERİ TABANI
+        const full200Questions = [
+            { id: 1, q: "Bilgisayarın komutları işleyerek aritmetik ve mantıksal işlemleri gerçekleştiren birimi hangisidir?", opts: ["Monitör", "Optik sürücü", "Güç kaynağı", "İşlemci (CPU)"], ans: "D", exp: "İşlemci (CPU), sistemdeki tüm aritmetik ve mantıksal işlemleri yürüten beynidir." },
+            { id: 2, q: "Bilgisayarın açılışında temel donanım başlatma görevini üstlenen yazılım hangi bileşende bulunur?", opts: ["BIOS/UEFI ürün yazılımı", "Kelime işlemci", "Antivirüs günlüğü", "Tarayıcı sürücüsü"], ans: "A", exp: "BIOS/UEFI yazılımı anakart üzerindeki kalıcı ROM çipinde bulunur ve açılış başlatmasını yapar." },
+            { id: 3, q: "Aşağıdakilerden hangisi donanım bileşenidir?", opts: ["İşletim sistemi", "RAM modülü", "Web tarayıcısı", "Metin düzenleyici"], ans: "B", exp: "RAM modülü fiziksel bir donanım parçasıdır; diğerleri yazılımdır." },
+            { id: 4, q: "Elektrik kesildiğinde içeriği normalde silinen bellek hangisidir?", opts: ["ROM", "Blu-ray disk", "RAM", "SSD"], ans: "C", exp: "RAM geçici (Volatile) bir bellektir, elektrik kesildiğinde veriler silinir." },
+            { id: 5, q: "Bilgisayarın temel işlemleri yerine getirebilmesi için aşağıdakilerden hangisi zorunlu değildir?", opts: ["Anakart", "Ana bellek", "Harici yazıcı", "İşlemci"], ans: "C", exp: "Harici yazıcı bir çevre birimidir; bilgisayarın çalışması için zorunlu değildir." },
+            { id: 6, q: "İşlemcinin bir sonraki işlemler için sık kullanılan veri ve komutları tuttuğu hızlı bellek hangisidir?", opts: ["Önbellek (cache)", "DVD", "Harici HDD", "Manyetik bant"], ans: "A", exp: "Cache (Önbellek) CPU içerisinde yer alan ve sık kullanılan verileri tutan en hızlı bellektir." },
+            { id: 7, q: "Bir bilgisayarda 64 bit işlemci ifadesi, doğrudan hangi özelliğe işaret eder?", opts: ["Ekran boyutuna", "İnternet hızına", "Sabit diskin dönüş hızına", "İşlemci mimarisinin sözcük/adresleme yeteneklerine"], ans: "D", exp: "64-bit ifadesi işlemci mimarisinin tek seferde işleyebildiği veri genişliğini ve adresleme kapasitesini ifade eder." },
+            { id: 8, q: "Bir bilgisayarda POST süreci ne zaman gerçekleşir?", opts: ["Yazdırma bittiğinde", "Açılışta temel donanım testi sırasında", "Monitör kapatıldığında", "Her dosya kaydedildiğinde"], ans: "B", exp: "POST (Power-On Self-Test), bilgisayar ilk açılırken donanımların çalışırlığını kontrol eder." },
+            { id: 9, q: "CPU çekirdek sayısının artması en çok hangi koşulda yarar sağlayabilir?", opts: ["Yalnızca ekran parlaklığında", "USB kablosunun uzunluğunda", "Hoparlör sesinde", "Birden çok iş parçacığına bölünebilen işlerde"], ans: "D", exp: "Çok çekirdek yapısı eşzamanlı ve birden fazla iş parçacığına (thread) bölünebilen yüklerde performans sağlar." },
+            { id: 10, q: "Bilgisayardaki güç kaynağının (PSU) temel işlevi nedir?", opts: ["RAM'i kalıcı depolamak", "İnternet paketlerini yönlendirmek", "Şebeke AC elektriğini bileşenlere uygun DC gerilimlere dönüştürmek", "Monitörün çözünürlüğünü artırmak"], ans: "C", exp: "PSU alternatif akımı (AC) bileşenlerin kullanabileceği düşük voltajlı doğru akıma (DC) çevirir." },
+            
+            { id: 11, q: "Aşağıdakilerden hangisi işletim sisteminin donanımla iletişimini sağlayan özel yazılımdır?", opts: ["SATA kablosu", "İşlemci fanı", "Aygıt sürücüsü", "RAM yuvası"], ans: "C", exp: "Aygıt sürücüleri (Driver) işletim sistemi ile donanım arasındaki iletişimi çeviren yazılımlardır." },
+            { id: 12, q: "Termal macun işlemci üzerinde esas olarak hangi amaçla kullanılır?", opts: ["Elektrik kablosunu yalıtmak", "Veri depolamak", "İşlemci ile soğutucu arasındaki ısı aktarımını iyileştirmek", "İşlemcinin saat hızını garanti ederek iki katına çıkarmak"], ans: "C", exp: "Termal macun, mikroskobik hava boşluklarını doldurarak ısı transferini maksimuma çıkarır." },
+            { id: 13, q: "İşlemci frekansı 3,5 GHz olan sistem için hangisi kesin olarak söylenebilir?", opts: ["3,5 Gbit/s internet sunduğu", "Her saniye tam 3,5 milyar program bitirdiği", "RAM kapasitesinin 3,5 GB olduğu", "Saat sinyalinin saniyede yaklaşık 3,5 milyar çevrim yaptığı"], ans: "D", exp: "1 GHz = 1 milyar çevrimdir. 3.5 GHz saat sinyalinin saniyede 3.5 milyar döngü yaptığı anlamına gelir." },
+            { id: 14, q: "Çoklu görev sırasında RAM kapasitesi yetersizse sık görülen sonuç nedir?", opts: ["Disk üzerindeki sanal bellek kullanımının artması ve yavaşlama", "İşlemcinin fiziksel olarak büyümesi", "Ethernet portunun devre dışı kalması", "Monitörün bozulması"], ans: "A", exp: "RAM yetmediğinde sistem disk üzerindeki sanal belleğe (paging file) başvurur ve disk yavaş olduğu için sistem kasılır." },
+            { id: 15, q: "Aşağıdakilerden hangisi bir bilgisayarın giriş-işlem-çıkış akışına doğru örnektir?", opts: ["Monitörden veri alma–yazıcıda işleme–RAM'e gösterme", "Klavyeden veri alma–CPU ile işleme–ekranda gösterme", "Hoparlörden veri alma–farede işleme–SSD'de gösterme", "Kasanın veri üretmesi–kablenin işlemesi–CPU'nun yazdırması"], ans: "B", exp: "Klavye (Giriş) -> CPU (İşlem) -> Ekran (Çıkış) sıralaması doğrudur." },
+            { id: 16, q: "GPU'nun temel görevi hangisidir?", opts: ["Mürekkep püskürtmek", "Ethernet adresi dağıtmak", "Şebeke elektriğini dönüştürmek", "Grafik ve paralel hesaplama işlemlerini yürütmek"], ans: "D", exp: "GPU (Grafik İşlem Birimi), binlerce çekirdeğiyle grafik ve paralel hesaplamaları işler." },
+            { id: 17, q: "Bilgisayarın sistem saati ve bazı BIOS/UEFI ayarlarının korunmasına yardımcı olan anakart pili genelde hangisidir?", opts: ["VGA kablosu", "CMOS/RTC pili", "USB bellek", "SSD denetleyicisi"], ans: "B", exp: "CMOS/RTC pili elektrik yokken saat ve BIOS ayarlarının silinmemesini sağlar." },
+            { id: 18, q: "Donanım uyumluluğu değerlendirilirken işlemci ile anakart için ilk bakılması gerekenlerden biri nedir?", opts: ["Soket ve yonga seti/BIOS desteği", "Yazıcıdaki kâğıt türü", "Masaüstü duvar kâğıdı", "Fare altlığının boyutu"], ans: "A", exp: "İşlemcinin physical soket yapısı ve anakart yonga seti desteği uyumlu olmak zorundadır." },
+            { id: 19, q: "Bir sistemde dar boğaz (bottleneck) kavramı neyi anlatır?", opts: ["Kasadaki boş bölmeyi", "Performansı sınırlayan en yavaş/kapasitesi yetersiz bileşeni", "Yalnızca internet kablosunu", "En yeni bileşeni"], ans: "B", exp: "Darboğaz, sistemdeki en zayıf halkanın genel performansı aşağı çekmesi durumudur." },
+            { id: 20, q: "Bilgisayarda bir bit kaç farklı mantıksal değer temsil eder?", opts: ["İki (0 ve 1)", "Sekiz", "Dört", "On altı"], ans: "A", exp: "Bit (Binary Digit) ikili tabanda sadece 0 veya 1 değerini alabilir." },
+
+            { id: 21, q: "Aşağıdakilerden hangisi öncelikle giriş birimidir?", opts: ["Yazıcı", "Hoparlör", "Klavye", "Projektör"], ans: "C", exp: "Klavye veri girişi sağlayan temel giriş donanımıdır." },
+            { id: 22, q: "Farede DPI değeri genel olarak neyle ilişkilidir?", opts: ["İşaretçi algılayıcısının hareket çözünürlüğüyle", "Yazıcının mürekkep seviyesiyle", "Monitörün fiziksel boyuyla", "RAM'in bant genişliğiyle"], ans: "A", exp: "DPI (Dots Per Inch), farenin fiziksel hareketi algılama hassasiyetini/çözünürlüğünü belirtir." },
+            { id: 23, q: "Optik fare hareketi genellikle nasıl algılar?", opts: ["Mikrofonla", "Yüzey görüntülerindeki değişimleri sensörle izleyerek", "Disk üzerindeki mıknatıslarla", "Mekanik yazıcı kafasıyla"], ans: "B", exp: "Optik fareler alt yüzeyin sürekli fotoğrafını çekip değişimleri analiz ederek hareketi hesaplar." },
+            { id: 24, q: "Belgedeki basılı yazıların makinece düzenlenebilir metne dönüştürülmesinde hangisi kullanılır?", opts: ["HDMI çıkışı", "Hoparlör", "Güç kaynağı", "OCR yazılımıyla birlikte tarayıcı/kamera"], ans: "D", exp: "OCR (Optical Character Recognition) görseldeki yazıları düzenlenebilir metne dönüştürür." },
+            { id: 25, q: "Barkod okuyucunun temel görevi nedir?", opts: ["Barkodda kodlanan bilgiyi sisteme aktarmak", "Ağ adresi dağıtmak", "Belgeleri zımbalamak", "Ekran renklerini üretmek"], ans: "A", exp: "Barkod okuyucu optik çizgileri veri koduna çevirerek sisteme aktarır." },
+            { id: 26, q: "Mikrofon hangi fiziksel büyüklüğü elektriksel/sayısal işarete dönüştürmeye yarar?", opts: ["Işık şiddetini doğrudan görüntüye", "Kağıt hareketini", "Manyetik disk dönüşünü", "Ses basıncı değişimlerini"], ans: "D", exp: "Mikrofon havadaki ses basınç dalgalarını elektrik sinyaline dönüştüren transducer'dır." },
+            { id: 27, q: "Joystick en çok hangi tür kullanımda anlamlıdır?", opts: ["Disk birleştirmede", "Belge yazdırmada", "Güç dönüştürmede", "Yön ve hareket kontrolü gereken oyun/simülasyonlarda"], ans: "D", exp: "Joystick simülasyon ve oyunlarda yönsel eksen kontrolü sunar." },
+            { id: 28, q: "Parmak izi okuyucu hangi sınıfta yer alır?", opts: ["Güç kaynağı", "Veri yolu", "Biyometrik giriş aygıtı", "Görüntü çıkış aygıtı"], ans: "C", exp: "Parmak izi cihazları kişisel biyometrik veriyi içeri alan giriş donanımıdır." },
+            { id: 29, q: "Dokunmatik kalemin basınç hassasiyeti özellikle hangi işte avantaj sağlar?", opts: ["Ethernet kablosu uzatmada", "Lazer toner eritmede", "Dijital çizimde çizgi kalınlığı/ifadesi kontrolünde", "RAM temizlemede"], ans: "C", exp: "Basınç hassasiyeti çizim programlarında fırça kalınlığı ve opaklık kontrolünü sağlar." },
+            { id: 30, q: "Web kamerası bilgisayara temel olarak ne sağlar?", opts: ["Kâğıt çıkışı", "Ses çıkışı", "Elektrik beslemesi", "Görüntü/video girdisi"], ans: "D", exp: "Web kameraları optik görüntüleri sayısal video girdisi olarak bilgisayara iletir." },
+
+            { id: 31, q: "QR kod okuyucunun akıllı telefon kamerasıyla yapılabilmesi neyi gösterir?", opts: ["QR kodun RAM türü olduğunu", "Aynı giriş işlevinin farklı donanım/yazılımla gerçekleştirilebildiğini", "Kameranın daima çıkış aygıtı olduğunu", "Bütün okuyucuların lazer kullandığını"], ans: "B", exp: "Özel bir donanım işlevinin yazılım desteğiyle genel amaçlı kameralarla da yapılabileceğini gösterir." },
+            { id: 32, q: "Mekanik klavyede anahtar (switch) genel olarak neyi belirler?", opts: ["Tuşun basış ve algılama karakterini", "Wi-Fi kanalını", "Anakartın soket tipini", "SSD kapasitesini"], ans: "A", exp: "Switch türü (Red, Blue vb.) tuşun basış hissini, sesini ve tetiklenme noktasını belirler." },
+            { id: 33, q: "Tarayıcı çözünürlüğü için kullanılan DPI ifadesi neyi belirtir?", opts: ["Ekran yenileme hızını", "Saniyedeki paket sayısını", "Diske yazılan bit sayısını", "İnç başına örneklenen nokta sayısını"], ans: "D", exp: "DPI (Dots Per Inch), tarama veya baskıda inç başına düşen nokta sayısını ifade eder." },
+            { id: 34, q: "Bir sayısallaştırıcı tablet (grafik tablet) bilgisayara hangi tür veri gönderir?", opts: ["Yalnızca ses dalgası", "Şebeke akımı", "Yalnızca ağ paketi", "Kalem konumu ve çoğu modelde basınç verisi"], ans: "D", exp: "Grafik tabletler X,Y koordinatları ve kalem basınç verilerini sisteme iletir." },
+            { id: 35, q: "Oyun kumandasındaki analog çubuk dijital yön tuşlarına göre ne avantaj sunar?", opts: ["Yön ve sapma miktarını kademeli bildirebilir", "Disk kapasitesini artırır", "İşlemciyi soğutur", "Monitör türünü değiştirir"], ans: "A", exp: "Analog çubuklar 360 derece ve açısal miktar verisi (hassas eğim) iletebilir." },
+            { id: 36, q: "Bir barkod okuyucunun USB HID klavye gibi çalışması ne anlama gelir?", opts: ["Veriyi yalnızca HDMI ile iletmesi", "Kâğıda baskı yapması", "RAM görevi görmesi", "Okunan veriyi klavye tuş girişleri gibi iletmesi"], ans: "D", exp: "HID (Human Interface Device) profili okunan karakterleri klavyeden yazılmış gibi sisteme basar." },
+            { id: 37, q: "Bilgisayarda ses kaydı yapmak için aşağıdakilerden hangi bileşen giriş yolundadır?", opts: ["Hoparlör", "Mikrofon", "Projektör", "Monitör"], ans: "B", exp: "Ses kaydı için mikrofon giriş aygıtı olarak kullanılır." },
+            { id: 38, q: "Bir optik tarayıcıda renkli tarama için hangi yaklaşım kullanılır?", opts: ["CPU fanının sıcaklık sensörü", "Yalnızca mekanik klavye", "Hoparlör bobini", "Işığın renk bileşenlerini algılayan sensörler"], ans: "D", exp: "Tarayıcılar RGB filtreli optik sensörler (CCD/CIS) kullanarak renk ayrışımı yapar." },
+            { id: 39, q: "Ekrana dokunulunca dokunma konumunu algılayan katman hangi işlevi üstlenir?", opts: ["Yalnızca çıktı", "Yalnızca depolama", "Güç dönüşümü", "Giriş"], ans: "D", exp: "Dokunmatik katman kullanıcının dokunduğu koordinatı sisteme bildiren giriş birimidir." },
+            { id: 40, q: "Klavye 'Num Lock' tuşunun temel etkisi nedir?", opts: ["Ağa IP vermek", "Sayısal tuş takımının işlevini değiştirmek", "CPU çekirdeği eklemek", "RAM'i formatlamak"], ans: "B", exp: "Num Lock tuşu sağdaki sayısal pedin rakam veya yön tuşları arasında geçiş yapmasını sağlar." },
+
+            { id: 41, q: "Aşağıdakilerden hangisi yalnızca tipik çıkış birimidir?", opts: ["Mikrofon", "Barkod okuyucu", "Klavye", "Hoparlör"], ans: "D", exp: "Hoparlör işlenmiş ses verisini dışarı aktaran saf bir çıkış birimidir." },
+            { id: 42, q: "Monitörlerde yenileme hızı hangi birimle belirtilir?", opts: ["DPI", "GB", "Watt-saat", "Hz"], ans: "D", exp: "Yenileme hızı Hertz (Hz) ile ifade edilir ve saniyedeki kare yenileme sayısını gösterir." },
+            { id: 43, q: "1920×1080 çözünürlük neyi belirtir?", opts: ["Depolama hacmini", "Yatay ve dikey piksel sayısını", "Ses kanalı sayısını", "Güç tüketimini"], ans: "B", exp: "1920 yatay, 1080 dikey matris piksel sayısını ifade eder (Full HD)." },
+            { id: 44, q: "Projektörün temel görevi nedir?", opts: ["Veri sıkıştırmak", "IP adresi dağıtmak", "Ses kaydetmek", "Görüntüyü daha geniş yüzeye yansıtmak"], ans: "D", exp: "Projektör ekrandaki görüntüyü optik merceklerle perde veya duvara yansıtır." },
+            { id: 45, q: "Kulaklık ve mikrofon içeren bir headset hangi açıdan birleşik aygıttır?", opts: ["Ses çıkışı ve ses girişi sağlaması", "Yalnızca sabit disk içermesi", "Hem toner hem kâğıt taşıması", "Yalnızca ağ anahtarı olması"], ans: "A", exp: "Headset kulaklıkla çıkış, mikrofonla giriş sağladığı için birleşik G/Ç cihazıdır." },
+            { id: 46, q: "Dokunmatik ekranı hem giriş hem çıkış yapan nedir?", opts: ["Görüntü göstermesi ve dokunmayı algılaması", "Sadece elektrik tüketmesi", "Kâğıt beslemesi", "İçinde her zaman HDD olması"], ans: "A", exp: "Görüntü vermesi ÇIKIŞ, dokunmayı algılaması GİRİŞ işlevidir." },
+            { id: 47, q: "Aşağıdaki arayüzlerden hangisi dijital görüntü ve ses taşıyabilir?", opts: ["RJ11 telefon fişi", "SATA güç bağlantısı", "HDMI", "PS/2 klavye portu"], ans: "C", exp: "HDMI (High-Definition Multimedia Interface) aynı kablodan yüksek kaliteli dijital ses ve görüntü taşır." },
+            { id: 48, q: "Monitörde tepki süresinin yüksek olması özellikle neye yol açabilir?", opts: ["SSD'nin depolamayı bırakmasına", "Hızlı hareketlerde iz/ bulanıklık etkisine", "Ethernet kablosunun kopmasına", "CPU soketinin değişmesine"], ans: "B", exp: "Tepki süresi (ms) yüksek olursa pikseller renk değiştirmekte gecikir ve ekranda ghosting/iz oluşur." },
+            { id: 49, q: "Bir yazıcı bilgisayardan baskı verisi alırken USB üzerinden durum bilgisini geri gönderebiliyorsa USB bağlantısı nasıl nitelendirilir?", opts: ["Sadece analog ses hattı", "Sadece elektrik hattı", "İki yönlü veri iletişimi", "Yalnızca tek yönlü görüntü çıkışı"], ans: "C", exp: "Verinin gidip bilgi dönüşünün olması iki yönlü (bidirectional) veri iletişimidir." },
+            { id: 50, q: "Çok işlevli yazıcının hem giriş hem çıkış birimi sayılmasının temel nedeni nedir?", opts: ["Yalnızca renkli basması", "Sadece toner içermesi", "Ethernet kablosu kullanması", "Tarama ve yazdırma yapabilmesi"], ans: "D", exp: "Tarayıcı (Giriş) ve Yazıcı (Çıkış) fonksiyonlarını bir arada sunduğu için G/Ç cihazıdır." },
+
+            { id: 51, q: "Ekranlarda piksel yoğunluğu artarken fiziksel boyut sabitse hangi sonuç beklenir?", opts: ["Uygun ölçeklendirmede daha keskin görüntü", "Mutlaka daha düşük parlaklık", "Mutlaka daha fazla RAM", "Mutlaka daha çok hoparlör"], ans: "A", exp: "Piksel yoğunluğunun (PPI) artması görüntü detaylarının daha net ve keskin görünmesini sağlar." },
+            { id: 52, q: "IPS, VA ve TN ifadeleri çoğunlukla neyi sınıflandırır?", opts: ["SATA kablo tiplerini", "CPU komut kümelerini", "LCD panel teknolojilerini", "Wi-Fi şifreleme türlerini"], ans: "C", exp: "IPS, VA ve TN liquid crystal ekranların (LCD) panel mimarisi türleridir." },
+            { id: 53, q: "Monitörün HDR desteği hangi alanla ilgilidir?", opts: ["Parlaklık ve renk/ton aralığı sunumuyla", "HDD RPM ile", "Modemin port sayısıyla", "Dosya sistemiyle"], ans: "A", exp: "HDR (High Dynamic Range) daha geniş renk paleti ve parlaklık kontrast dengesi sunar." },
+            { id: 54, q: "E-ink ekranlar hangi özellikleriyle öne çıkar?", opts: ["Toner kullanmalarıyla", "Çok yüksek kare hızında oyun zorunluluğuyla", "Veriyi manyetik şeride yazmalarıyla", "Sabit görüntüyü düşük enerjiyle korumalarıyla"], ans: "D", exp: "E-ink (Elektronik mürekkep) ekranlar sadece görüntü değişirken enerji harcar, sabit görüntüyü enerjisiz tutar." },
+            { id: 55, q: "Bir bilgisayara bağlı çizici (plotter) hangi kullanımda daha uygundur?", opts: ["Büyük teknik çizim ve vektörel çizim çıktılarında", "İşlemci soketini değiştirmede", "Ağ trafiğini bölmede", "Kullanıcı sesini kaydetmede"], ans: "A", exp: "Plotter cihazları mimari ve mühendislik projelerinin geniş kağıtlara basılmasında kullanılır." },
+            { id: 56, q: "Hoparlörün kaliteli ses verebilmesi için dijital sesin analog sinyale çevrilmesi hangi dönüştürücüyle yapılabilir?", opts: ["RTC", "NIC", "ADC", "DAC"], ans: "D", exp: "DAC (Digital-to-Analog Converter) dijital ses verisini hoparlörün çalabileceği analog elektrik sinyaline çevirir." },
+            { id: 57, q: "Aşağıdakilerden hangisi haptik geri bildirime örnektir?", opts: ["Klavye tuşunun veri girişi", "Tarayıcının fotoğraf okuması", "Oyun kolunun titreşim vermesi", "Mikrofonun konuşma kaydetmesi"], ans: "C", exp: "Haptik geri bildirim kullanıcının dokunma duyusuna titreşim ve kuvvet ile verilen tepkidir." },
+            { id: 58, q: "Akıllı bir televizyon bilgisayara HDMI ile bağlandığında genellikle nasıl kullanılır?", opts: ["İşlemci soketi", "Ana bellek", "Harici görüntü ve ses çıkış aygıtı", "Disk denetleyicisi"], ans: "C", exp: "HDMI ile bağlanan TV harici ekran ve ses çıkış birimi olarak işlev görür." },
+            { id: 59, q: "USB üzerinden hem görüntü alan hem dokunma verisi gönderen bir interaktif ekran nasıl sınıflandırılır?", opts: ["Yalnız soğutma birimi", "Yalnız depolama birimi", "Giriş-çıkış birimi", "Yalnız giriş birimi"], ans: "C", exp: "Görüntü aldığı için ÇIKIŞ, dokunma ilettiği için GİRİŞ birimidir." },
+            { id: 60, q: "Bir monitörün parlaklığı yaygın olarak hangi birimle ifade edilir?", opts: ["RPM", "Mbps", "nit (cd/m²)", "TB"], ans: "C", exp: "Ekran parlaklığı nit veya candela per square meter (cd/m²) cinsinden tanımlanır." },
+
+            { id: 61, q: "Lazer yazıcılarda kâğıda aktarılan toz boya ne olarak adlandırılır?", opts: ["Termal macun", "Mürekkep damlası", "Fotoreseptör camı", "Toner"], ans: "D", exp: "Lazer yazıcılar elektrostatik olarak kağıda yapışan toz yapıdaki toneri kullanır." },
+            { id: 62, q: "Mürekkep püskürtmeli yazıcıda görüntü nasıl oluşturulur?", opts: ["Toner lazerle eritilerek", "Küçük mürekkep damlacıkları kâğıda püskürtülerek", "Metal uçla kabartılarak", "Manyetik disk döndürülerek"], ans: "B", exp: "Mürekkep püskürtmeli (Inkjet) yazıcılar mikroskobik nozüllerden sıvı mürekkep püskürtür." },
+            { id: 63, q: "Nokta vuruşlu yazıcıların ayırt edici özelliği nedir?", opts: ["Sıvı mürekkep püskürtmeleri", "Lazerle toner sabitlemeleri", "Fotokopi camı kullanmaları", "İğnelerle şerit üzerinden darbeli baskı yapmaları"], ans: "D", exp: "Dot matrix yazıcılar matris dizilimli iğnelerin mürekkep şeridine vurmasıyla baskı yapar." },
+            { id: 64, q: "Termal fiş yazıcılarında sık kullanılan baskı ortamı hangisidir?", opts: ["Manyetik bant", "Normal RAM modülü", "Blu-ray disk", "Isıya duyarlı termal kâğıt"], ans: "D", exp: "Termal yazıcılar mürekkep kullanmaz; ısı gördüğünde kararan özel termal kağıda basar." },
+            { id: 65, q: "Lazer yazıcının fuser (sabitleme) birimi ne yapar?", opts: ["IP adresi dağıtır", "Isı ve basınçla toneri kâğıda sabitler", "Mürekkebi püskürtür", "Kağıdı tarayarak OCR yapar"], ans: "B", exp: "Fuser ünitesi yüksek sıcaklık ve basınç uygulayarak toz toneri kağıt liflerine eritip sabitler." },
+            { id: 66, q: "Çift taraflı otomatik baskı özelliğinin adı nedir?", opts: ["Simplex-only", "Duplex", "RAID", "Spooling dışı"], ans: "B", exp: "Duplex baskı kağıdın her iki yüzüne otomatik baskı yapılmasını ifade eder." },
+            { id: 67, q: "Yazıcıların PPM değeri genellikle neyi ifade eder?", opts: ["İnç başına pikseli", "Saniyedeki bit sayısını", "Toner ağırlığını", "Dakikada basılabilen sayfa sayısını"], ans: "D", exp: "PPM (Pages Per Minute), yazıcının bir dakikada basabildiği sayfa sayısı hızıdır." },
+            { id: 68, q: "Fotoğraf baskısında mürekkep püskürtmeli yazıcıların sık tercih edilme nedeni nedir?", opts: ["Sadece siyah baskı yapmaları", "Her zaman en düşük sayfa maliyetine sahip olmaları", "İyi renk geçişleri ve fotoğraf ortamı desteği sunabilmeleri", "Toner fuser gerektirmeleri"], ans: "C", exp: "Inkjet teknolojisi sıvı mürekkepleri karıştırarak pürüzsüz renk geçişleri ve yüksek fotoğraf kalitesi verir." },
+            { id: 69, q: "Baskıda DPI hangi anlamdadır?", opts: ["İşlemci saat hızı", "İnç başına basılabilen nokta sayısı", "Disk bölümü indeksi", "Saniyedeki sayfa sayısı"], ans: "B", exp: "DPI (Dots Per Inch), kağıt üzerindeki 1 inçlik alana vurulan nokta sayısını temsil eden baskı kalitesidir." },
+            { id: 70, q: "'Yazdırma kuyruğu' (spooler) ne işe yarar?", opts: ["Yazıcıya RAM lehimlemek", "Baskı işlerini sıraya alıp yazıcıya iletmek", "Router üzerinden NAT yapmak", "Kâğıdı fiziksel boyamak"], ans: "B", exp: "Print Spooler servisi belgeleri diske tamponlayarak sırayla yazıcıya gönderir." },
+
+            { id: 71, q: "CMYK renk modelinde K harfi neyi belirtir?", opts: ["Siyah (key)", "Kâğıt", "Kırmızı", "Krom"], ans: "A", exp: "CMYK baskı renk uzayında Cyan, Magenta, Yellow ve Key (Black - Siyah) bulunur." },
+            { id: 72, q: "Baskı maliyetini değerlendirirken hangi ölçüt daha anlamlıdır?", opts: ["Monitör çözünürlüğü", "Sayfa başı toplam sarf maliyeti", "USB port hızı", "Sadece yazıcının rengi"], ans: "B", exp: "Toplam sahip olma maliyetinde en kritik etken sayfa başına düşen kartuş/toner gideridir." },
+            { id: 73, q: "Mürekkep püskürtmeli yazıcı uzun süre kullanılmazsa ne sorun görülebilir?", opts: ["Baskı kafası/nozüllerde tıkanma", "Anakart soketinin değişmesi", "Lazer fuser erimesi zorunluluğu", "RJ45 kablosunun bozulması"], ans: "A", exp: "Sıvı mürekkep nozül uçlarında kuruyarak kanalları tıkayabilir." },
+            { id: 74, q: "Bir yazıcı sürücüsünün görevi nedir?", opts: ["İşlemci fanını döndürmek", "İşletim sistemi baskı işini yazıcının anlayacağı biçime hazırlamak", "RAM'i kalıcılaştırmak", "Wi-Fi sinyalini üretmek"], ans: "B", exp: "Sürücü, belgedeki veriyi yazıcının anlayacağı dil kodlarına (Page Description Language) çevirir." },
+            { id: 75, q: "Darbeli yazıcıların hâlâ kullanılabildiği özel bir alan hangisidir?", opts: ["Çok nüshalı karbonlu form basımı", "RAM üretimi", "HDR video düzenleme", "Kablosuz yönlendirme"], ans: "A", exp: "İğneli yazıcılar fiziki darbe vurduğu için kendinden karbonlu çoklu faturalara tek seferde basabilir." },
+            { id: 76, q: "A3 ve A4 terimleri yazıcılar için neyi belirtir?", opts: ["Mürekkep yoğunluğunu", "Desteklenen kâğıt boyutlarını", "USB sürümünü", "Ağ sınıfını"], ans: "B", exp: "A3 ve A4 uluslararası standart kağıt boyut formlarıdır." },
+            { id: 77, q: "Yazıcının otomatik belge besleyicisi (ADF) çoğunlukla hangi işlemde kullanılır?", opts: ["RAM'i yükseltmek", "Çok sayfalı tarama/kopyalamayı beslemek", "Toner tozunu üretmek", "Ethernet kablosunu takmak"], ans: "B", exp: "ADF (Automatic Document Feeder) çok sayfalı evrakları sırayla tarayıcı camına çeker." },
+            { id: 78, q: "Ağ yazıcısının avantajı nedir?", opts: ["Tarayıcların çalışmaması", "Birden fazla kullanıcının ağ üzerinden baskı gönderebilmesi", "Zorunlu olarak yalnız USB kullanması", "Her zaman internetsiz çalışamaması"], ans: "B", exp: "Ağ yazıcıları Ethernet/Wi-Fi üzerinden ağdaki tüm bilgisayarlara ortak hizmet verir." },
+            { id: 79, q: "Yazıcıda 'taslak' baskı modu genellikle hangi ödünleşmeyi amaçlar?", opts: ["Daha az sarf veya daha hızlı baskı karşılığında kalite düşüşü", "Daima en yüksek fotoğraf kalitesi", "Disk kapasitesini iki katına çıkarma", "Daha yüksek enerji tüketimi zorunluluğu"], ans: "A", exp: "Draft (taslak) modu az mürekkep harcayarak hızlı baskı verir ancak baskı kalitesi düşüktür." },
+            { id: 80, q: "3B (3D) yazıcıların klasik ofis yazıcılarından en önemli farkı nedir?", opts: ["Malzemeyi katmanlar halinde ekleyerek üç boyutlu nesne üretmeleri", "Yalnızca görüntü giriş aygıtı olmaları", "Yalnızca kâğıda iki boyutlu baskı yapmaları", "Ağ paketi yönlendirmeleri"], ans: "A", exp: "3D yazıcılar filaman malzemeyi katman katman eklemeli imalatla (additive manufacturing) 3 boyutlu objeye çevirir." },
+
+            { id: 81, q: "Aşağıdakilerden hangisi kalıcı veri depolama aygıtıdır?", opts: ["SSD", "L1 önbellek", "CPU kayıtçısı", "RAM"], ans: "A", exp: "SSD uçucu olmayan kalıcı depolama birimidir; elektrik yokken de veriyi korur." },
+            { id: 82, q: "1 bayt kaç bittir?", opts: ["4", "8", "2", "16"], ans: "B", exp: "1 Byte = 8 Bit'tir." },
+            { id: 83, q: "1 KiB kaç bayttır?", opts: ["2048", "100", "1024", "1000"], ans: "C", exp: "İkili veri standartında 1 KiB (Kibibyte) = 1024 Byte'tır." },
+            { id: 84, q: "HDD'nin SSD'ye göre tipik ayırt edici özelliği hangisidir?", opts: ["Hiç mekanik parçası olmaması", "Dönen manyetik plakalar ve hareketli kafa içermesi", "NAND flash kullanması", "Verileri yalnızca RAM'de tutması"], ans: "B", exp: "HDD elektromekanik yapıdadır; dönen diskler ve kafa kolları barındırır." },
+            { id: 85, q: "SSD'lerde yaygın depolama ortamı hangisidir?", opts: ["Optik mercek", "Manyetik teyp", "CRT tüp", "NAND flash bellek"], ans: "D", exp: "SSD'ler yarı iletken NAND Flash hafıza hücrelerini kullanır." },
+            { id: 86, q: "M.2 ifadesi tek başına aşağıdakilerden hangisini belirtir?", opts: ["Her zaman SATA hızını", "Fiziksel kart biçimi/bağlantı standardını", "Her zaman NVMe protokolünü", "Sadece kapasiteyi"], ans: "B", exp: "M.2 bir fiziksel form faktörüdür (SATA veya NVMe protokolü kullanabilir)." },
+            { id: 87, q: "NVMe protokolü çoğunlukla hangi bağlantı altyapısını kullanır?", opts: ["VGA", "PCI Express", "RJ11", "PS/2"], ans: "B", exp: "NVMe (Non-Volatile Memory Express) doğrudan PCI Express hatları üzerinden çalışır." },
+            { id: 88, q: "Bir diskte okuma hızının MB/s ile belirtilmesi neyi ifade eder?", opts: ["Dönüş sayısını", "Milisaniye cinsinden gecikmeyi", "Toplam enerji tüketimini", "Saniyede aktarılan megabayt miktarını"], ans: "D", exp: "MB/s (Megabytes per second) birim zamanda aktarılan veri miktarını gösterir." },
+            { id: 89, q: "Depolama aygıtında erişim süresi neyi belirtir?", opts: ["İstenen veriye ulaşmadan önce geçen süreyi", "Monitör yenileme hızını", "Diskin dış çapını", "Kasa rengini"], ans: "A", exp: "Access time, okuma talebi geldikten sonra verinin ilk hücresine ulaşılana kadar geçen süredir." },
+            { id: 90, q: "Veri yedeklemenin temel amacı nedir?", opts: ["İnterneti şifrelemek", "CPU sıcaklığını düşürmek", "Veri kaybında geri yükleme yapabilmek", "RAM kapasitesini artırmak"], ans: "C", exp: "Yedekleme arıza, silinme veya virüs durumunda veriyi kurtarabilmek için yapılır." },
+
+            { id: 91, q: "Harici USB diski güvenli kaldırmanın temel gerekçesi nedir?", opts: ["Ekran kartını kapatmak", "Modemi yeniden başlatmak", "Yazıcı sürücüsünü yüklemek", "Bekleyen yazma işlemleri nedeniyle veri bozulmasını önlemek"], ans: "D", exp: "Önbellekte kalan yazma işlemlerinin tamamlanmasını sağlayarak dosya sisteminin bozulmasını önler." },
+            { id: 92, q: "TRIM komutu SSD'lerde hangi işlemle ilişkilidir?", opts: ["Kafa hizasının mekanik ayarı", "Blu-ray yazımı", "Artık kullanılmayan blokların bildirilmesi", "RAM voltajı seçimi"], ans: "C", exp: "TRIM, işletim sisteminin silinen dosyaların yerini SSD kontrolcüsüne bildirerek performansı korumasını sağlar." },
+            { id: 93, q: "SSD'de aşınma dengeleme (wear leveling) neyi amaçlar?", opts: ["Yazma yükünü flash hücrelerine dağıtmayı", "Monitör piksellerini döndürmeyi", "Fan hızını sabitlemeyi", "Ethernet kablosunu korumayı"], ans: "A", exp: "Flash hücrelerin ömrü sınırlı olduğundan denetleyici yazma yükünü tüm hücrelere eşit dağıtır." },
+            { id: 94, q: "Optik depolama aygıtına örnek hangisidir?", opts: ["DVD", "L1 önbellek", "DDR5 RAM", "NVMe SSD"], ans: "A", exp: "DVD, CD ve Blu-ray lazer ışığıyla okunan optik depolama ortamlarıdır." },
+            { id: 95, q: "Bir dosyanın aynı klasöre taşınması ile başka diske kopyalanması arasındaki temel fark hangisidir?", opts: ["Kopyalama yeni bir veri örneği oluştururken taşıma konumu değiştirir", "İkisi de RAM'i siler", "İkisi de diski formatlar", "Hiçbiri veriyle ilgilenmez"], ans: "A", exp: "Kopyalama veriyi ikiler, taşıma ise adres işaretçisini veya konumunu değiştirir." },
+            { id: 96, q: "SMART verileri daha çok ne için kullanılır?", opts: ["Disk sağlığına ilişkin göstergeleri izlemek", "Klavye dilini değiştirmek", "IP adresini çevirmek", "Yazıcı rengini kalibre etmek"], ans: "A", exp: "S.M.A.R.T. disk üzerindeki sıcaklık, bad sector, çalışma saati gibi sağlık verilerini izler." },
+            { id: 97, q: "RAID 1 düzeninin temel özelliği nedir?", opts: ["Yedeklemenin tümüyle gereksiz hale gelmesi", "Mutlaka dört disk gerektirmesi", "Verilerin diskler arasında aynalanması", "Verinin sadece bir diske yazılması"], ans: "C", exp: "RAID 1 (Mirroring) aynı veriyi iki ayrı diske eşzamanlı yazar." },
+            { id: 98, q: "RAID 0 yapılandırmasının temel riski nedir?", opts: ["Tüm disklerin salt okunur olması", "Disklerden biri bozulursa tüm dizinin verilerinin kaybolabilmesi", "Verinin otomatik iki kopya olması", "İnternetin kesilmesi"], ans: "B", exp: "RAID 0 veriyi disklere böler (striping). Eşlik veya yedeklilik olmadığı için 1 disk bozulursa tüm veri gider." },
+            { id: 99, q: "Bulut depolama ile yerel depolama arasındaki temel fark hangisidir?", opts: ["Verinin hizmet sağlayıcının uzaktaki altyapısında tutulabilmesi", "Bulutta hiç fiziksel disk bulunmaması", "Yerel diskin internet zorunluluğu", "Bulutun mutlaka daha hızlı olması"], ans: "A", exp: "Bulut depolamada veriler sunucu çiftliklerindeki disklerde tutulur ve internetle erişilir." },
+            { id: 100, q: "3-2-1 yedekleme yaklaşımı genel olarak neyi önerir?", opts: ["Üç veri kopyası, iki farklı ortam, bir kopya farklı konum", "Üç monitör, iki klavye, bir fare", "Üç işletim sistemi, iki işlemci, bir yazıcı", "Üç modem, iki router, bir switch"], ans: "A", exp: "3 kopya veri, 2 farklı depolama medya türü, 1 kopya felaket kurtarma için farklı lokasyonda olmalıdır." },
+
+            { id: 101, q: "7200 RPM ifadesi HDD için neyi gösterir?", opts: ["Plakaların dakikadaki dönüş sayısını", "Diskin kalınlığını", "Önbellek boyutunu", "Saniyedeki yazma baytını"], ans: "A", exp: "RPM (Revolutions Per Minute), manyetik diskin bir dakikadaki dönme tur sayısıdır." },
+            { id: 102, q: "2,5 inç ve 3,5 inç HDD tanımları çoğunlukla neye karşılık gelir?", opts: ["İşlemci mimarisine", "Monitör piksel sayısına", "Dosya uzantısına", "Sürücülerin fiziksel biçim boyutuna"], ans: "D", exp: "2.5 inç laptop/SSD boyutu, 3.5 inç masaüstü HDD fiziksel form standartıdır." },
+            { id: 103, q: "Güncel tüketici HDD'lerinde yaygın veri bağlantısı hangisidir?", opts: ["HDMI", "PCI eski paralel yuva", "VGA", "SATA"], ans: "D", exp: "SATA (Serial ATA) dahili disklerin anakarta bağlandığı standart arayüzdür." },
+            { id: 104, q: "Eski PATA/IDE sabit disklerde yaygın kablo türü hangisidir?", opts: ["HDMI kablosu", "Şerit (ribbon) kablo", "Fiber optik kablo", "RJ11 kablosu"], ans: "B", exp: "Eski IDE/PATA sürücüler 40 veya 80 iletkenli geniş şerit kablo kullanırdı." },
+            { id: 105, q: "SAS diskler hangi ortamda daha sık kullanılır?", opts: ["Sadece projeksiyonlarda", "Klavye içinde", "Yalnızca dokunmatik telefon ekranlarında", "Kurumsal sunucu ve depolama sistemleri"], ans: "D", exp: "SAS (Serial Attached SCSI) yüksek güvenilirlik sunduğu için sunucu sistemlerinde tercih edilir." },
+            { id: 106, q: "SMR kayıt yönteminin CMR'ye göre dezavantajı bazı iş yüklerinde nedir?", opts: ["Özellikle yinelenen rastgele yazmalarda performans düşebilmesi", "Hiç veri yazamaması", "Mutlaka daha sessiz monitör üretmesi", "Yalnızca DVD okuması"], ans: "A", exp: "SMR (Shingled Magnetic Recording) izleri kiremit gibi üst üste bindirdiği için rastgele yazmalarda yavaştır." },
+            { id: 107, q: "HDD'deki arama süresi (seek time) neyi ifade eder?", opts: ["CPU çekirdek sayısını", "SSD hücresinin silinmesini", "Okuma/yazma kafasının ilgili iz konumuna hareket süresini", "Kablo uzunluğunu"], ans: "C", exp: "Seek time, okuma kafasının fiziksel olarak verinin bulunduğu iz üzerine gelme süresidir." },
+            { id: 108, q: "Bir diskin parçalanması (fragmentation) mekanik HDD'de neden performansı etkileyebilir?", opts: ["Piksel sayısını azaltması nedeniyle", "Kafanın farklı konumlar arasında daha çok hareket etmesi nedeniyle", "Fan yönünü değiştirmesi nedeniyle", "Modemi ısıtması nedeniyle"], ans: "B", exp: "Parçalanmış dosyalarda mekanik kafa diskin farklı yerlerine sürekli atlamak zorunda kalır ve gecikme artar." },
+            { id: 109, q: "SSD'lerde klasik HDD birleştirmesinin rutin olarak önerilmemesinin başlıca nedeni nedir?", opts: ["SSD'nin yalnızca CD okuması", "SSD'lerin hiçbir veri saklamaması", "PCIe'nin çalışmaması", "Mekanik arama maliyetinin bulunmaması ve gereksiz yazma yaratabilmesi"], ans: "D", exp: "SSD'de rastgele erişim süresi sıfıra yakındır; birleştirme yapmak hücre yazma ömrünü gereksiz tüketir." },
+            { id: 110, q: "Bir SATA SSD ile PCIe/NVMe SSD karşılaştırmasında hangisi genellikle doğrudur?", opts: ["NVMe sadece mekanik disklerde bulunur", "SATA SSD daima daha hızlıdır", "PCIe/NVMe sürücüler daha yüksek aktarım potansiyeli sunabilir", "İkisi de VGA ile çalışır"], ans: "C", exp: "SATA 3 en fazla ~600 MB/s sunarken, PCIe Gen4/Gen5 NVMe SSD'ler 7000-14000 MB/s hızlara çıkabilir." },
+
+            { id: 111, q: "SSD kapasitesinin doluluğu arttıkça bazı modellerde yazma performansı neden düşebilir?", opts: ["Boş blok yönetimi ve önbellekleme koşulları zorlaşabildiğinden", "Modem frekansı değiştiğinden", "Klavye tuşları ısındığından", "Ekran çözünürlüğü arttığından"], ans: "A", exp: "SSD doldukça kontrolcü silme/yazma (Garbage Collection) işlemleri için boş blok bulmakta zorlanır." },
+            { id: 112, q: "Bir HDD'nin 'bad sector' uyarısı neye işaret eder?", opts: ["Okuma/yazma açısından sorunlu disk alanlarına", "GPU çekirdeğine", "Monitörün kırık pikseline", "RJ45 uç sayısına"], ans: "A", exp: "Bad sector, manyetik yüzeyin fiziksel veya mantıksal olarak hasar görüp veri okunamayan kısmıdır." },
+            { id: 113, q: "Disk önbelleğinin görevi nedir?", opts: ["Ekranda imleci hareket ettirmek", "Diski kablosuz ağa bağlamak", "Bazı veri erişimlerini geçici tutarak işlemleri hızlandırmak", "Lazer tonerini eritmek"], ans: "C", exp: "Disk üzerindeki RAM önbellek, sık okunan/yazılan verileri tamponlayarak hızı artırır." },
+            { id: 114, q: "USB 3.x harici diskin USB 2.0 porta takılması hangi sonuca yol açabilir?", opts: ["Monitörün açılmamasına", "RAM'in silinmesine", "Diskin kapasitesinin yarıya inmesine", "Bağlantı hızının yavaş port standardıyla sınırlanmasına"], ans: "D", exp: "Veri aktarımı iki cihaz/port arasındaki en yavaş standart (USB 2.0 = 480 Mbps) hızıyla sınırlandırılır." },
+            { id: 115, q: "2 TB üretici kapasitesi ile işletim sisteminde daha düşük TiB görünmesinin temel nedenlerinden biri nedir?", opts: ["Bütün dosyaların virüs olması", "Ondalık TB ile ikili TiB birimlerinin farklı olması", "Diskin mutlaka arızalı olması", "Kablonun HDMI olması"], ans: "B", exp: "Üreticiler 1 TB = 1000^3 byte alırken, işletim sistemi ikili tabanda (1024^3) TiB olarak hesaplar." },
+            { id: 116, q: "Disk bölümleme (partitioning) ne işe yarar?", opts: ["Fiziksel depolama alanını mantıksal bölümlere ayırır", "İşlemci çekirdeği üretir", "Monitör parlaklığı ayarlar", "Router tablosunu siler"], ans: "A", exp: "Bölümleme tek bir fiziksel diski C:, D: gibi bağımsız mantıksal sürücülere böler." },
+            { id: 117, q: "GPT bölümleme düzeninin MBR'ye göre başlıca avantajlarından biri nedir?", opts: ["Yalnızca 2 TB altında çalışması", "Mutlaka disket gerektirmesi", "Sadece yazıcılarda bulunması", "Daha büyük diskleri ve daha fazla bölüm tanımını destekleyebilmesi"], ans: "D", exp: "MBR max 2 TB ve 4 birincil bölüm desteklerken GPT 2 TB üzeri diskleri ve 128 bölümü destekler." },
+            { id: 118, q: "NVMe SSD takmadan önce anakart için ne kontrol edilmelidir?", opts: ["Mouse DPI değeri", "M.2 yuvasının ilgili PCIe/NVMe desteği ve fiziksel uyumu", "Yazıcıda A4 bulunması", "Hoparlörün ses seviyesi"], ans: "B", exp: "M.2 yuvasının sadece SATA mı yoksa NVMe (PCIe) mi desteklediği kontrol edilmelidir." },
+            { id: 119, q: "NAS'ın temel tanımı hangisidir?", opts: ["CPU'nun aritmetik birimi", "Ekran panel türü", "Ağ üzerinden erişilen depolama sistemi", "Yalnızca klavye adaptörü"], ans: "C", exp: "NAS (Network Attached Storage) yerel ağa bağlı bağımsız depolama cihazıdır." },
+            { id: 120, q: "Bir işletme kritik verileri yalnız RAID 1'de saklıyor; hangi ifade doğrudur?", opts: ["RAID 1 disk arızasına karşı yardımcıdır ancak ayrı yedeklemenin yerini tutmaz", "RAID 1 silinen dosyaları daima geri getirir", "RAID 1 fidye yazılımından mutlak korur", "RAID 1 internetsiz çalışamaz"], ans: "A", exp: "RAID bir donanım toleransıdır, yedekleme değildir. Yanlışlıkla silinen veri veya virüs her iki diski de etkiler." },
+
+            { id: 121, q: "Anakartın temel işlevi hangisidir?", opts: ["Toner üretmek", "Mikrofon kaydetmek", "Sistem bileşenleri arasındaki elektriksel/veri bağlantılarını sağlamak", "Ekranı yansıtmak"], ans: "C", exp: "Anakart tüm donanımları veri yolları ve güç hatlarıyla birbirine bağlayan omurgadır." },
+            { id: 122, q: "CPU soketi neyi belirler?", opts: ["HDD dosya adını", "Ethernet kablosu rengini", "Yazıcının ppm değerini", "Uyumlu işlemcinin fiziksel/elektriksel bağlantı tipini"], ans: "D", exp: "Soket tipi (Örn: LGA1700, AM5) anakarta takılabilecek fiziksel işlemci yapısını belirler." },
+            { id: 123, q: "RAM'in takıldığı anakart yuvaları genelde hangi adla anılır?", opts: ["M.2 Key-E anteni", "VGA soketi", "RJ11 yuvası", "DIMM yuvası"], ans: "D", exp: "Masaüstü bilgisayarlarda RAM modüllerinin takıldığı slotlara DIMM yuvası denir." },
+            { id: 124, q: "Klasik kuzey köprüsü (Northbridge) mimarisinde hangi işlevler yaygındı?", opts: ["CPU ile yüksek hızlı bellek/grafik bağlantılarını yönetmek", "Wi-Fi şifresini belirlemek", "Yalnız klavye ışığını açmak", "Kağıdı ısıtmak"], ans: "A", exp: "Eski mimaride Kuzey Köprüsü CPU, RAM ve AGP/PCIe ekran kartı arasındaki yüksek hızlı iletişimi yönetirdi." },
+            { id: 125, q: "Klasik güney köprüsü (Southbridge) mimarisinde hangi görevler yaygındı?", opts: ["GPU gölgelendiricilerini hesaplamak", "Monitör piksellerini basmak", "CPU çekirdeğinin içinde komut çözmek", "SATA, USB ve düşük hızlı G/Ç denetimini sağlamak"], ans: "D", exp: "Güney Köprüsü yavaş birimler olan depolama, USB, ses, PCI ve BIOS ile ilgilenirdi." },
+            { id: 126, q: "Modern bilgisayarlarda eski kuzey köprüsünün birçok görevi nereye taşınmıştır?", opts: ["Optik diske", "Ethernet kablosuna", "İşlemci içine", "Yazıcı kartuşuna"], ans: "C", exp: "Modern sistemlerde RAM denetleyicisi ve PCIe hatları doğrudan CPU entegresi içine alınmıştır." },
+            { id: 127, q: "PCH (Platform Controller Hub) terimi hangi yapıyla ilişkilidir?", opts: ["Mürekkep tankıyla", "LCD panel ışığıyla", "Modern platformlarda çevre birimi/ G/Ç denetim yongasıyla", "HDD kafa koluyla"], ans: "C", exp: "PCH, eski Güney köprüsünün yerini alan modern Intel/AMD sistem kontrol yongasıdır." },
+            { id: 128, q: "BIOS/UEFI ayar ekranına girmek için genellikle ne yapılır?", opts: ["HDMI kablosu kesilir", "RAM fiziksel olarak çıkarılır", "Kâğıt beslenir", "Açılış sırasında üreticinin belirttiği tuşa basılır"], ans: "D", exp: "Açılış sırasında Del, F2, F12 gibi tuşlara basılarak BIOS arayüzüne girilir." },
+            { id: 129, q: "Anakart form faktörü neyi etkiler?", opts: ["İnternet aboneliği türünü", "Fiziksel boyutu, kasa uyumu ve yerleşim olanaklarını", "Ekrandaki fontu", "Yazıcı rengini"], ans: "B", exp: "Form faktörü (ATX, Micro-ATX, Mini-ITX) anakartın boyutlarını ve kasa uyumluluğunu belirler." },
+            { id: 130, q: "ATX ve microATX arasındaki temel farklardan biri nedir?", opts: ["Sadece disk dosya türü olması", "İkisinin birer işletim sistemi olması", "Kart boyutu ve tipik genişleme kapasitesi", "CPU'nun mutlaka aynı hızda olması"], ans: "C", exp: "ATX standart büyük boyuttadır, Micro-ATX daha küçüktür ve daha az PCIe slotuna sahiptir." },
+
+            { id: 131, q: "VRM devresinin anakarttaki görevi nedir?", opts: ["İşlemci gibi bileşenlere uygun ve kararlı güç sağlamak", "Wi-Fi ağ adını belirlemek", "Görüntüyü optik kâğıda işlemek", "SATA'yı monitöre çevirmek"], ans: "A", exp: "VRM (Voltage Regulator Module) PSU'dan gelen 12V'u işlemcinin kullandığı hassas 1.2V-1.4V seviyelerine düşürür." },
+            { id: 132, q: "CMOS sıfırlama (clear CMOS) işlemi genel olarak neyi amaçlar?", opts: ["Firmware ayarlarını varsayılan duruma getirmeyi", "İşlemciyi değiştirmeyi", "SSD'yi fiziksel olarak silmeyi", "Windows'u otomatik kurmayı"], ans: "A", exp: "Clear CMOS, BIOS ayarlarını fabrika varsayılanlarına döndürür." },
+            { id: 133, q: "Entegre ses yongası hangi işlevi sunar?", opts: ["Toner besleme", "Mekanik disk kafa kontrolü", "Ağ yönlendirme tablosu", "Ses giriş/çıkış işlemleri için ses donanımı"], ans: "D", exp: "Anakart üzerindeki ses çipi (Realtek vb.) ses giriş ve çıkış sinyallerini işler." },
+            { id: 134, q: "Anakart üzerindeki '24 pin ATX' bağlantısı ne içindir?", opts: ["Monitörün VGA sinyali", "Analog telefon hattı", "Anakartın ana güç beslemesi", "Yazıcı kağıt girişi"], ans: "C", exp: "24-pin konektör PSU'dan anakartın ana devrelerine elektrik sağlayan bağlantıdır." },
+            { id: 135, q: "CPU için ayrıca kullanılan EPS 4/8 pin güç bağlantısı ne işe yarar?", opts: ["İşlemci güç devresini besler", "RJ45 ağ kablosunu kilitler", "Optik diski okur", "USB klavyeyi veri yoluna bağlar"], ans: "A", exp: "EPS/ATX12V 4/8 pin kablosu doğrudan CPU VRM beslemesi içindir." },
+            { id: 136, q: "İşlemci RAM kontrolcüsünün işlemciye entegre olmasının olası faydası nedir?", opts: ["Router portu eklemesi", "Toner tüketimini azaltması", "Bellek erişim gecikmesini azaltabilmesi", "Yazıcı çözünürlüğünü artırması"], ans: "C", exp: "Bellek denetleyicisinin CPU içinde olması veri yolunu kısaltır ve erişim gecikmesini düşürür." },
+            { id: 137, q: "Anakart üzerindeki hata LED'leri (CPU/DRAM/VGA/BOOT) neye yarar?", opts: ["Sadece dekoratif aydınlatmadır", "Bilgisayarın Wi-Fi hızını ikiye katlar", "Bütün diskleri otomatik şifreler", "Açılış sorunlarının hangi aşamada olabileceğine dair tanı göstergesi sunar"], ans: "D", exp: "EZ Debug LED'ler donanım başlatma adımlarında arızalı bileşeni göstermeye yarar." },
+            { id: 138, q: "UEFI Secure Boot'un temel amacı nedir?", opts: ["Önyükleme zincirinde güvenilir imzalı yazılımların çalışmasını desteklemek", "Monitörün parlaklığını artırmak", "RAM'i kalıcı belleğe çevirmek", "Yazıcıyı ağa bağlamak"], ans: "A", exp: "Secure Boot açılışta zararlı rootkit yazılımların yüklenmesini imzalı sürücülerle engeller." },
+            { id: 139, q: "Anakarttaki M.2 Key-M yuvası sıklıkla hangi aygıt için kullanılır?", opts: ["Hoparlör sürücüsü", "CRT ekran", "SSD", "Klavye tuşu"], ans: "C", exp: "Key-M slotları yüksek hızlı NVMe ve SATA M.2 SSD'ler için tasarlanmıştır." },
+            { id: 140, q: "Eski mimaride kuzey/güney köprüsü anlatılırken hangisi önemlidir?", opts: ["Güney köprüsünün yazılım lisansı olması", "Görevlerin modern CPU ve PCH mimarilerinde değişmiş olması", "Her yeni sistemde iki köprünün de ayrı çip zorunlu olması", "Kuzey köprüsünün yazıcı türü olması"], ans: "B", exp: "Günümüzde Kuzey köprüsü tamamen CPU içine alınmış, Güney köprüsü PCH adını almıştır." },
+
+            { id: 141, q: "FSB açılımı hangisidir?", opts: ["Front Side Bus", "Frame Signal Buffer", "File System Bridge", "Fast Storage Block"], ans: "A", exp: "FSB (Front Side Bus), eski Intel sistemlerinde CPU ile Kuzey köprüsü arasındaki ana veri yoluydu." },
+            { id: 142, q: "Geleneksel FSB'nin temel görevi neydi?", opts: ["Wi-Fi kanalı seçmek", "CPU'yu sistem yonga seti/bellek altyapısıyla haberleştirmek", "Hoparlöre güç sağlamak", "Yazıcıya toner göndermek"], ans: "B", exp: "FSB işlemcinin RAM ve çipsetle iletişim kurduğu ana otobüstü." },
+            { id: 143, q: "FSB teriminin güncel işlemcilerde her zaman geçerli olmamasının nedeni nedir?", opts: ["SSD'lerin fiyatının değişmesi", "Monitörlerde HDMI bulunması", "Bütün anakartlarda IDE olması", "Modern işlemcilerde entegre bellek denetleyicisi ve farklı bağlantı mimarileri kullanılması"], ans: "D", exp: "Intel QPI/DMI, AMD HyperTransport/Infinity Fabric gibi nokta-noktaya yeni mimarilere geçilmiştir." },
+            { id: 144, q: "Veri yolu genişliğinin 64 bit olması neyi ifade eder?", opts: ["Ağ kablosu uzunluğunun 64 m olmasını", "Disk kapasitesinin 64 GB olmasını", "Bir aktarımda taşınabilen veri yolunun bit genişliğini", "Saat frekansının 64 GHz olmasını"], ans: "C", exp: "Veri yolu genişliği tek bir saat darbesinde (cycle) paralele taşınabilen bit miktarıdır." },
+            { id: 145, q: "PCI Express'in (PCIe) 'x16' gösterimi neyi belirtir?", opts: ["16 inç ekranı", "16 hatlı (lane) bağlantı düzenini", "16 watt güç tüketimini", "16 GB RAM zorunluluğunu"], ans: "B", exp: "x16 terimi verinin 16 adet seri hat (lane) üzerinden aktarıldığını ifade eder." },
+            { id: 146, q: "PCIe neslinin yükselmesi tipik olarak ne sağlar?", opts: ["CPU soğutmanın gereksizleşmesi", "Her kartın aynı performansa sahip olması", "Tüm kabloların USB olması", "Hat başına aktarım kapasitesinde artış"], ans: "D", exp: "Her yeni PCIe jenerasyonu (Gen3->Gen4->Gen5) hat başına bant genişliğini ikiye katlar." },
+            { id: 147, q: "Ekran kartları en sık hangi genişleme yuvasına takılır?", opts: ["DIMM yuvası", "PCIe x16 fiziksel yuva", "RJ11 girişi", "SATA güç konnektörü"], ans: "B", exp: "Harici ekran kartları yüksek bant genişliği için PCIe x16 slotuna takılır." },
+            { id: 148, q: "USB veri yolu ne için kullanılır?", opts: ["Manyetik plaka döndürmek", "Çevre birimlerine veri ve çoğu durumda güç bağlantısı sağlamak", "Yalnızca kâğıt beslemek", "Yalnızca işlemci soğutmak"], ans: "B", exp: "USB (Universal Serial Bus) klavye, fare, disk gibi birimlere veri ve 5V/12V güç taşır." },
+            { id: 149, q: "SATA veri bağlantısı temel olarak hangisi içindir?", opts: ["Depolama sürücüleriyle haberleşme", "Telefon hattını bölme", "Monitör parlaklığı", "Hoparlör hacmi"], ans: "A", exp: "SATA (Serial ATA) sabit disk ve SSD depolama birimlerini bağlar." },
+            { id: 150, q: "Thunderbolt teknolojisinin önemli özelliklerinden biri nedir?", opts: ["Yalnız analog telefon taşıması", "Yalnızca disket kullanması", "Sadece yazıcı tonerini ölçmesi", "Uyumlu sürümlerde yüksek hızlı veri ve görüntü aktarımını desteklemesi"], ans: "D", exp: "Thunderbolt tek porttan yüksek hızlı PCIe verisi, DisplayPort görüntüsü ve güç aktarımı sağlar." },
+
+            { id: 151, q: "VGA bağlantısının görüntü sinyali karakteri nasıldır?", opts: ["Manyetik kayıt", "Analog", "Optik ses", "Tamamen dijital paket anahtarlama"], ans: "B", exp: "VGA (Video Graphics Array) eski 15-pinli analog görüntü arayüzüdür." },
+            { id: 152, q: "DVI-D bağlantısı temel olarak ne taşır?", opts: ["DC işlemci beslemesi", "Dijital görüntü", "SATA verisi", "Analog telefon sesi"], ans: "B", exp: "DVI-D (Digital) sadece dijital görüntü sinyallerini iletir." },
+            { id: 153, q: "DisplayPort ve HDMI için hangisi doğrudur?", opts: ["Yalnızca analog klavye içindir", "İkisi de RAM yuvasıdır", "Her ikisi de uygun sürümlerde dijital görüntü ve ses taşıyabilir", "Doğrudan HDD platosunu döndürür"], ans: "C", exp: "HDMI ve DisplayPort dijital ses ve görüntüyü aynı kablodan taşıyan gelişmiş arayüzlerdir." },
+            { id: 154, q: "Anakart üzerindeki görüntü çıkışının kullanılabilmesi çoğu sistemde neye bağlıdır?", opts: ["Mutlaka ayrı ekran kartının çıkarılmasına", "RJ11 portu olmasına", "Yazıcıya toner takılmasına", "İşlemcide kullanılabilir entegre grafik biriminin ve uygun platform desteğinin bulunmasına"], ans: "D", exp: "Anakarttaki HDMI/DP çıkışının çalışması için CPU içinde dahili grafik işlemci (iGPU) olmalıdır." },
+            { id: 155, q: "Bir PCIe x1 kartı uygun bir x16 fiziksel yuvaya takılabiliyorsa hangi ifade doğrudur?", opts: ["Anakart SATA'yı kaybeder", "Kart otomatik x16 hızına çıkar", "Kart desteklenen hat sayısı ve uyumluluk koşullarıyla çalışabilir", "RAM kapasitesi 16 katına çıkar"], ans: "C", exp: "Küçük kartlar büyük yuvaya takılabilir fakat kart kendi hat sayısı (x1) kadar hızda çalışır." },
+            { id: 156, q: "Veri yolu bant genişliği hangi kavramdır?", opts: ["Monitör piksel boyu", "Hoparlör frekansı", "Birim zamanda teorik/etkin olarak taşınabilen veri miktarı", "Verinin diskte kalma süresi"], ans: "C", exp: "Bandwidth, bir iletişim kanalından saniyede geçebilecek maksimum veri hacmidir." },
+            { id: 157, q: "Gecikme (latency) ile bant genişliği arasındaki fark için hangisi doğrudur?", opts: ["İkisi de yalnız disk kapasitesidir", "Gecikme cevap süresini, bant genişliği aktarım miktarını anlatır", "İkisi daima birbirine eşittir", "Gecikme monitör boyutudur"], ans: "B", exp: "Latency bir paketin varış süresidir (ping/gecikme); Bandwidth ise borunun genişliğidir." },
+            { id: 158, q: "PCIe SSD'nin teorik hızını değerlendirirken hangi ikili önemlidir?", opts: ["Mouse hassasiyeti ve klavye dili", "PCIe nesli ve kullanılan hat sayısı", "Kasa rengi ve fan boyu", "Yazıcı markası ve kağıt kalınlığı"], ans: "B", exp: "Hızı belirleyen şey PCIe jenerasyonu (Gen3/Gen4) ve hat miktarıdır (x2/x4)." },
+            { id: 159, q: "USB-C hakkında hangisi doğrudur?", opts: ["Her USB-C bağlantısı zorunlu Thunderbolt 4'tür", "Bir konnektör tipidir; desteklenen hız ve işlevler cihaza/kabloya göre değişebilir", "Tüm USB-C kabloları aynı güçte çalışır", "USB-C yalnızca analog VGA'dır"], ans: "B", exp: "USB-C fiziksel uç biçimidir; arkasında USB 2.0, USB 3.2, Thunderbolt veya DP protokolü çalışıyor olabilir." },
+            { id: 160, q: "Eski PCI ile PCIe arasındaki temel mimari fark nedir?", opts: ["PCI'nin SSD olması", "Aralarında fark bulunmaması", "PCIe'nin seri, nokta-noktaya hat bağlantıları kullanması", "PCIe'nin yalnız ses taşıması"], ans: "C", exp: "Eski PCI paralel paylaşımlı veri yoluyken, PCIe bağımsız seri hatlardan oluşan nokta-noktaya mimaridir." },
+
+            { id: 161, q: "Yerel alan ağı için kullanılan kısaltma hangisidir?", opts: ["SSD", "DPI", "LAN", "CPU"], ans: "C", exp: "LAN (Local Area Network), ev veya ofis içi yerel alana verilen isimdir." },
+            { id: 162, q: "Bir router'ın temel görevi nedir?", opts: ["Farklı IP ağları arasında paket yönlendirmek", "RAM'i soğutmak", "Görüntüyü taramak", "Kâğıda çıktı almak"], ans: "A", exp: "Router (Yönlendirici), Katman 3'te farklı mantıksal IP ağları arasında paket rotalaması yapar." },
+            { id: 163, q: "Switch'in temel görevi nedir?", opts: ["Şebeke AC'sini DC'ye çevirmek", "CPU komutu çalıştırmak", "Yerel ağdaki cihazları bağlayıp Ethernet çerçevelerini uygun portlara iletmek", "Mürekkep püskürtmek"], ans: "C", exp: "Switch (Anahtar), Katman 2'de yerel ağdaki cihazları bağlar ve MAC adresine göre veri iletir." },
+            { id: 164, q: "Klasik hub ile switch farkı için hangisi doğrudur?", opts: ["Hub aldığı sinyali portlarına tekrarlar; switch MAC tablosuyla seçici iletebilir", "İkisi de yazıcı kartuşudur", "Hub yönlendirme tablosu kullanır", "Switch daima yalnız kablosuzdur"], ans: "A", exp: "Hub gelen veriyi süzmeden her porta saçar (Broadcast); Switch ise sadece hedef MAC portuna verir." },
+            { id: 165, q: "Modemin temel işlevi nedir?", opts: ["HDD plakasını hızlandırmak", "USB belleği biçimlendirmek", "Erişim teknolojisine uygun sinyal/modülasyon dönüşümüyle hat üzerinden veri iletişimi sağlamak", "Sadece ekran görüntüsü üretmek"], ans: "C", exp: "Modem (Modülatör-Demodülatör) servis sağlayıcı sinyalini dijital ağ verisine çevirir." },
+            { id: 166, q: "Ethernet ağ kartının temel işlevi nedir?", opts: ["Bilgisayarın CPU'sunu değiştirmek", "Yazıcı mürekkebi ölçmek", "Bilgisayarı Ethernet ağına bağlamak", "Görüntüyü projektöre vermek"], ans: "C", exp: "NIC (Network Interface Card) bilgisayarın fiziksel ağa kabloyla bağlanmasını sağlar." },
+            { id: 167, q: "MAC adresi hangi katmanla ilişkilidir?", opts: ["Fiziksel kasa boyutu", "Güç kaynağı", "Veri bağlantı katmanı", "Uygulama katmanı yalnız"], ans: "C", exp: "MAC (Media Access Control) OSI 2. Katman olan Data Link (Veri Bağlantı) seviyesinde fiziksel adrestir." },
+            { id: 168, q: "IPv4 adresinin uzunluğu kaç bittir?", opts: ["48", "16", "32", "128"], ans: "C", exp: "IPv4 adresleri 32 bit uzunluğundadır (Örn: 192.168.1.1)." },
+            { id: 169, q: "IPv6 adresinin uzunluğu kaç bittir?", opts: ["48", "128", "32", "64"], ans: "B", exp: "IPv6 adresleri 128 bit uzunluğundadır ve onaltılık (hex) tabanda yazılır." },
+            { id: 170, q: "Özel IPv4 adres aralığına örnek hangisidir?", opts: ["8.8.8.0/24", "1.1.1.0/24", "192.168.1.0/24", "224.0.0.0/4"], ans: "C", exp: "192.168.x.x, 10.x.x.x ve 172.16.x.x aralıkları yerel ağlara ayrılmış özel (Private) IP bloklarıdır." },
+
+            { id: 171, q: "Varsayılan ağ geçidi genellikle hangi cihaza ait IP adresidir?", opts: ["Yazıcı kartuşunun", "Klavye sürücüsünün", "Yerel ağı başka ağlara bağlayan router arayüzünün", "Monitörün HDMI girişinin"], ans: "C", exp: "Default Gateway, yerel ağ dışına çıkan paketlerin iletildiği router bacağının IP adresidir." },
+            { id: 172, q: "DHCP servisinin temel işlevi nedir?", opts: ["Mikrofonu seslendirmek", "Cihazlara IP yapılandırma bilgilerini otomatik vermek", "Alan adlarını kâğıda basmak", "Diskin yüzeyini taramak"], ans: "B", exp: "DHCP (Dynamic Host Configuration Protocol) ağa katılan cihazlara otomatik IP, Subnet, Gateway atar." },
+            { id: 173, q: "DNS'nin temel görevi nedir?", opts: ["Güç gerilimini sabitlemek", "Alan adlarını IP adresleri gibi kayıtlarla eşlemek", "Yerel belleği artırmak", "Toner eritmek"], ans: "B", exp: "DNS (Domain Name System) google.com gibi isimleri 142.250.x.x gibi IP adreslerine çevirir." },
+            { id: 174, q: "Ethernet kablolarında yaygın 8 konumlu modüler konnektör gündelik dilde ne diye anılır?", opts: ["RJ11", "HDMI", "SATA", "RJ45"], ans: "D", exp: "Ethernet ağ kablolarının ucuna çakılan 8-pinli standart konnektör RJ45'tir." },
+            { id: 175, q: "1000BASE-T ifadesi hangi teknolojiyle ilişkilidir?", opts: ["Bakır bükümlü çift kablo üzerinden Gigabit Ethernet", "Analog VGA çıkışı", "RAM gecikmesi", "DVD yazma hızı"], ans: "A", exp: "1000BASE-T, Cat5e/Cat6 UTP bakır kablo üzerinden 1 Gbps Gigabit Ethernet standardıdır." },
+            { id: 176, q: "Ev tipi router'da NAT kullanımı genellikle ne sağlar?", opts: ["RAM'i kalıcı yapmayı", "HDD'yi döndürmeyi", "Yazıcı toner tüketimini azaltmayı", "Özel yerel IP adreslerinin dış ağ erişimi için adres/port çevrimini"], ans: "D", exp: "NAT (Network Address Translation) çok sayıda yerel IP'nin tek bir kamu (Public) IP üzerinden internete çıkmasını sağlar." },
+            { id: 177, q: "Bir switch'in 'yönetilebilir' olması neyi sağlar?", opts: ["VLAN gibi ağ ayarlarını yapılandırma ve izleme olanağı", "Mutlaka Wi-Fi modem olmasını", "Monitör piksellerini değiştirmesini", "CPU çekirdeği artırmasını"], ans: "A", exp: "Yönetilebilir (Managed) switch'lerde VLAN, Spanning Tree, Port Mirroring ve QoS ayarları yapılabilir." },
+            { id: 178, q: "İki cihaz aynı yerel ağda iletişim kurarken switch hangi tabloyu öğrenip kullanır?", opts: ["CMYK renk tablosu", "Dosya uzantısı tablosu", "MAC adres tablosu", "BIOS parola tablosu"], ans: "C", exp: "Switch portlarına gelen çerçevelerin kaynak adreslerinden CAM / MAC adres tablosunu oluşturur." },
+            { id: 179, q: "Kablosuz erişim noktası (access point) temel olarak ne yapar?", opts: ["Lazerle baskı yapar", "Wi-Fi istemcilerini kablolu yerel ağa bağlayabilir", "HDD mekanik kafa taşır", "RAM yuvasını çoğaltır"], ans: "B", exp: "Access Point kablosuz Wi-Fi cihazları kablolu Ethernet altyapısına köprüler." },
+            { id: 180, q: "Bir bilgisayar ağında ping komutu çoğunlukla neyi sınamak için kullanılır?", opts: ["Kağıdın boyutunu belirlemek", "ICMP kullanarak hedefe erişim ve yanıt gecikmesini ölçmek", "Anakart BIOS'unu silmek", "Monitör ışığını artırmak"], ans: "B", exp: "Ping komutu ICMP Echo Request göndererek karşı cihazın erişilebilirliğini ve paket gecikmesini (ms) ölçer." },
+
+            { id: 181, q: "Powerline adaptörlerin temel çalışma prensibi nedir?", opts: ["Veri iletişimini bina elektrik tesisatı üzerinden taşımak", "Telefon hattını optik diske dönüştürmek", "Monitöre görüntü yansıtmak", "Yalnız fiber kabloda ışık kullanmak"], ans: "A", exp: "Powerline (PLC) teknolojisi yüksek frekanslı veri sinyallerini evdeki 220V elektrik kablolarına bindirir." },
+            { id: 182, q: "DSL splitter'ın temel amacı nedir?", opts: ["RAM'i ikiye bölmek", "Ethernet paketlerine NAT yapmak", "HDMI görüntüyü büyütmek", "Aynı bakır telefon hattındaki DSL verisi ile ses frekanslarını ayırmak"], ans: "D", exp: "Splitter bakır teldeki yüksek frekanslı İnternet verisi ile düşük frekanslı Ses (Telefon) sinyalini birbirinden ayırır." },
+            { id: 183, q: "Router ile modem tek cihazda birleştirildiğinde hangi ifade uygundur?", opts: ["Switch kullanımı fiziksel olarak imkânsızdır", "Cihaz mutlaka fiber kablo üretir", "Cihaz hem hat bağlantısı hem yönlendirme işlevlerini sağlayabilir", "Cihaz yalnız klavye görevi görür"], ans: "C", exp: "Evlerde kullanılan birleşik modem-router cihazları tek kasada Modem, Router, Switch ve Wi-Fi AP bulundurur." },
+            { id: 184, q: "İki bilgisayar aynı switch'e bağlı ancak farklı VLAN'lardaysa doğrudan iletişim için genellikle ne gerekir?", opts: ["VLAN'lar arası yönlendirme yapan katman 3 cihaz/işlev", "Monitörün HDMI değiştirilmesi", "Toner kartuşu", "Yalnızca farklı klavye"], ans: "A", exp: "VLAN'lar mantıksal olarak ayrı ağlardır. Aralarında iletişim için Katman 3 Router/L3 Switch gerekir." },
+            { id: 185, q: "Bir bilgisayar IP adresi olarak 169.254.x.x aldıysa yaygın olası neden nedir?", opts: ["Ekran kartının arızalanması", "Modemin mutlaka fiber olması", "DHCP'den adres alamayıp otomatik yerel adres seçmesi", "DNS'nin kesin çalışması"], ans: "C", exp: "169.254.x.x aralığı APIPA (Automatic Private IP Addressing) tarafı olup DHCP sunucuya ulaşılamadığını gösterir." },
+            { id: 186, q: "Wi-Fi şifresinin güçlü olması neden önemlidir?", opts: ["HDD hızını kesin iki katına çıkarmak", "Yetkisiz kablosuz ağ erişimi olasılığını azaltmak", "Yazıcı kâğıdını korumak", "RAM eklemek"], ans: "B", exp: "Güçlü parola kablosuz ağın dışarıdan kırılmasını ve yetkisiz kişilerin ağa sızmasını önler." },
+            { id: 187, q: "WPA3 hangi alanla ilgilidir?", opts: ["CPU fan boyutuyla", "SATA disk biçimiyle", "Monitör parlaklığıyla", "Kablosuz ağ güvenliğiyle"], ans: "D", exp: "WPA3 (Wi-Fi Protected Access 3) en güncel kablosuz ağ şifreleme ve güvenlik standardıdır." },
+            { id: 188, q: "Fiber internet bağlantısında ONT cihazının görevi genellikle nedir?", opts: ["HDD'yi biçimlendirmek", "VGA çözünürlüğü seçmek", "Toner eritmek", "Optik erişim sinyali ile Ethernet arayüzü arasında dönüştürme/sonlandırma sağlamak"], ans: "D", exp: "ONT (Optical Network Terminal) fiberden gelen ışık sinyallerini elektrikli Ethernet verisine çevirir." },
+            { id: 189, q: "Ağdaki bir cihaz IP adresiyle açılıyor ancak alan adıyla açılamıyorsa ilk hangi hizmet sorgulanır?", opts: ["GPU belleği", "VRM", "DNS", "CMOS pil"], ans: "C", exp: "IP adresiyle erişilip isimle erişilemiyorsa alan adını IP'ye çeviren DNS sunucuda sorun var demektir." },
+            { id: 190, q: "İki bilgisayar arası Ethernet kablosunun çok uzun olması durumunda ne görülebilir?", opts: ["Monitör boyunun değişmesi", "RAM'in ikiye katlanması", "SSD'nin NVMe olması", "Standart sınırlar aşıldığında bağlantı kalitesi/sürekliliği sorunu"], ans: "D", exp: "Bakır UTP kabloların maksimum sınırı 100 metredir. Bu sınır aşıldığında sinyal zayıflar ve paket kayıpları oluşur." },
+
+            { id: 191, q: "PoE (Power over Ethernet) ne sağlar?", opts: ["Sadece ses kartı sürücüsü yüklenmesini", "RAM saat hızının artmasını", "Uygun Ethernet bağlantısı üzerinden veriyle birlikte elektrik gücü taşınmasını", "Yazıcı başlığının değişmesini"], ans: "C", exp: "PoE (802.3af/at) tek bir UTP kablosu üzerinden IP kamera/AP gibi cihazlara veriyle birlikte elektrik enerjisi verir." },
+            { id: 192, q: "Ağdaki 'broadcast' çerçevelerini ayırmak için tipik olarak hangi yaklaşım kullanılır?", opts: ["Monitör çözünürlüğünü düşürmek", "Hub port sayısını artırmak", "VLAN veya yönlendirme sınırları oluşturmak", "Yalnız kablo rengini değiştirmek"], ans: "C", exp: "Broadcast fırtınalarını bölmek için ağlar Router veya Switch üzerinde VLAN'lara ayrılır." },
+            { id: 193, q: "Evin bir odasında Wi-Fi çekiyor ama sinyal çok zayıfsa hangisi makul çözümlerden biridir?", opts: ["SSD kapasitesini azaltmak", "Kablolu bağlantılı ek erişim noktası yerleştirmek", "CPU termal macunu değiştirmek", "Yazıcının toneri değiştirmek"], ans: "B", exp: "Kör noktaya kabloyla bağlı ek bir Access Point veya Mesh düğümü koymak kapsama alanını çözer." },
+            { id: 194, q: "Powerline bağlantı hızının evlere göre farklılık göstermesinin nedeni ne olabilir?", opts: ["Elektrik tesisatının kalitesi, faz ve parazit koşulları", "Yazıcının A4 kullanması", "Klavye tuş dizilimi", "Monitör piksel sayısı"], ans: "A", exp: "Powerline hızı bina içi bakır elektrik hatlarının eskimeliğine, gürültüye ve sigorta panosu fazlarına bağlıdır." },
+            { id: 195, q: "Daisy-chain iki switch bağlandığında dikkat edilmesi gereken ağ riski hangisidir?", opts: ["Yedeksiz topolojide uplink arızasının aşağı bağlantıyı kesebilmesi", "Her iki switch'in CPU haline gelmesi", "Modemin lazer yazıcı olması", "Görüntü belleğinin sıfırlanması"], ans: "A", exp: "Switchler zincirleme tek hatla bağlandığında aradaki tek bir kablo koparsa sonraki tüm cihazların ağı kopar." },
+            { id: 196, q: "Bir evde internet çalışıyor fakat bir PC'de kablolu bağlantı yok; diğer PC aynı switch ile çalışıyor. İlk kontrol için hangisi uygundur?", opts: ["Tüm binanın elektrik aboneliğini değiştirmek", "Sorunlu bilgisayarın Ethernet kablosu ve port bağlantısını kontrol etmek", "SSD'yi zorunlu formatlamak", "Yazıcı kartuşu doldurmak"], ans: "B", exp: "Sorun tek bir cihazda olduğu için ilk adım o cihaza giren kablo, RJ45 ucu ve ağ kartı ışıkları kontrol edilmelidir." },
+            { id: 197, q: "Bir router'ın WAN portunun temel işlevi nedir?", opts: ["Üst ağ/İnternet tarafına bağlantı sağlamak", "USB fareyi taramak", "Monitöre ses çıkışı vermek", "RAM'i takmak"], ans: "A", exp: "WAN (Wide Area Network) portu router'ın servis sağlayıcıya veya üst internet ağına bağlanan kapısıdır." },
+            { id: 198, q: "Ağ topolojisinde yıldız yapı hangi düzeni anlatır?", opts: ["Her aygıtın bir yazıcıya bağlanması", "Uç cihazların merkezi bir bağlantı cihazına ayrı hatlarla bağlanması", "Verinin yalnız USB diskte saklanması", "Tüm bilgisayarların tek halkada zorunlu olması"], ans: "B", exp: "Yıldız (Star) topolojisi tüm istemcilerin merkezi bir Switch/Hub cihazına müstakil kablo ile bağlanmasıdır." },
+            { id: 199, q: "Bir switch'in bağlantı ışığı yanmıyorsa ilk akla gelecek kontrollerden biri nedir?", opts: ["Kablo, port ve karşı cihazın fiziksel bağlantısını incelemek", "Önce BIOS'u mutlaka güncellemek", "Monitörü 4K'ya geçirmek", "Önce yazıcı sürücüsünü silmek"], ans: "A", exp: "Link ışığının yanmaması Katman 1 (Fiziksel) kopukluğu gösterir; kablo ve port ucu kontrol edilir." },
+            { id: 200, q: "Bir ofiste çalışanlar aynı ağda dosya paylaşacak ve internet erişecekse hangi cihaz kombinasyonu çoğu durumda yeterlidir?", opts: ["Yalnızca VGA dağıtıcı", "Yalnızca RAM bellek", "Yalnızca termal yazıcı", "Router ve gerekli sayıda Ethernet portu sağlayan switch"], ans: "D", exp: "İnternete çıkış için Router, yerel cihazların birbiriyle konuşması ve dosya paylaşımı için Switch kombinasyonu şarttır." }
+        ];
+
+        // 200 Soruyu Ekrana Basan Dinamik Yapı
+        function render200Questions() {
+            const container = document.getElementById('quizContainer200');
+            let html = '';
+
+            full200Questions.forEach((item) => {
+                const qId = `bank-q${item.id}`;
+                html += `
+                <div class="quiz-question" id="${qId}">
+                    <p>${item.id}. ${item.q}</p>
+                    <ul class="options-list">
+                        <li><label><input type="radio" name="bq${item.id}" onclick="checkAnswer('${qId}', 'A', '${item.ans}')"> A) ${item.opts[0]}</label></li>
+                        <li><label><input type="radio" name="bq${item.id}" onclick="checkAnswer('${qId}', 'B', '${item.ans}')"> B) ${item.opts[1]}</label></li>
+                        <li><label><input type="radio" name="bq${item.id}" onclick="checkAnswer('${qId}', 'C', '${item.ans}')"> C) ${item.opts[2]}</label></li>
+                        <li><label><input type="radio" name="bq${item.id}" onclick="checkAnswer('${qId}', 'D', '${item.ans}')"> D) ${item.opts[3]}</label></li>
+                    </ul>
+                    <div class="explanation"><strong>Doğru Cevap: ${item.ans}</strong> — ${item.exp}</div>
+                </div>`;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Dinamik Cevap Kontrolü (Doğru=Yeşil, Yanlış=Kırmızı + Açıklama)
+        function checkAnswer(questionId, selectedOption, correctOption) {
+            const questionElement = document.getElementById(questionId);
+            const labels = questionElement.querySelectorAll('.options-list label');
+            const explanationBox = questionElement.querySelector('.explanation');
+
+            labels.forEach(label => {
+                label.classList.remove('correct', 'incorrect');
+            });
+
+            if (selectedOption === correctOption) {
+                labels.forEach(label => {
+                    if (label.innerText.trim().startsWith(selectedOption)) {
+                        label.classList.add('correct');
+                    }
+                });
+                if (explanationBox) explanationBox.style.display = 'none';
+            } else {
+                labels.forEach(label => {
+                    if (label.innerText.trim().startsWith(selectedOption)) {
+                        label.classList.add('incorrect');
+                    }
+                    if (label.innerText.trim().startsWith(correctOption)) {
+                        label.classList.add('correct');
+                    }
+                });
+                if (explanationBox) explanationBox.style.display = 'block';
+            }
+        }
+
+        // Sayfa yüklendiğinde 200 soruyu hazırla
+        window.onload = render200Questions;
+    </script>
+</body>
+</html>
